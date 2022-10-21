@@ -121,7 +121,7 @@ for i = 2:length(ref)
     ref(i, IDX_TIME) = ref(i-1, IDX_TIME) + dt_;
 end
 
-plot(ref(:,1))
+%plot(ref(:,1))
 %% simulation
 
 if control_mode == "pure_pursuit"

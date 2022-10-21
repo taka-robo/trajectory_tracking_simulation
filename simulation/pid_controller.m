@@ -56,11 +56,9 @@ if (error_yaw > pi)
 elseif (error_yaw < -pi)
     error_yaw = error_yaw + 2*pi;
 end
+vr= -kp * (error_latlon(LAT)) - kd * error_yaw + ff_curvature;
+vl = -kp * (error_latlon(LAT));
 
-delta_des = -kp * (error_latlon(LAT)) - kd * error_yaw + ff_curvature;
-fb_lat = -kp * (error_latlon(LAT));
-fb_yaw = - kd * error_yaw;
-
-u = [v_des, delta_des];
+u = [vr, vl];
 
 debug_info = [pr(IDX_X), pr(IDX_Y), pr(IDX_YAW), fb_lat, fb_yaw, ff_curvature, error_latlon(LAT)];
