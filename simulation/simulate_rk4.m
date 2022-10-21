@@ -31,6 +31,7 @@ for t = ts:dt:tf
     input_buf = [u; input_buf(1:end-1, :)];
     u_delayed = input_buf(end,:);
     
+    % 4次のルンゲクッタ
     % -- runge-kutta --
     k1 = model(x, u_delayed, param);
     k2 = model(x + k1*dt/2, u_delayed, param);

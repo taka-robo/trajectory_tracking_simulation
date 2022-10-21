@@ -20,7 +20,7 @@ addpath ../path_design
 control_mode_option = ["pure_pursuit", "pid", "mpc", "mpc_no_constraints"];
 control_mode = control_mode_option(3);
 
-save_video = 0; %1:save, 0:no
+save_video = 1; %1:save, 0:no
 
 %% preliminaries
 rad2deg = 180 / pi;
@@ -30,14 +30,14 @@ kmh2ms = 1000 / 3600;
 simulation_time = 35;
 simulation_rk4_time_step = 0.002; % simulation time step
 
-vel_ref = 30 * kmh2ms;
+vel_ref = 30 * kmh2ms;% velocity reference
 
 % for dynamics model
 param.tau = 0.27; % steering dynamics: 1d-approximated time constant
-param.wheelbase = 2.69;
-param.steer_lim = 30 * deg2rad;
-param.vel_max = 10;
-param.vel_min = -5;
+param.wheelbase = 2.69; %[m]
+param.steer_lim = 30 * deg2rad; %[rad]
+param.vel_max = 10; %[m/s]
+param.vel_min = -5; %[m/s]
 
 param.input_delay = 0.24; % [s]
 param.control_dt = 0.03; % [s]
@@ -49,7 +49,7 @@ param.steering_steady_state_error_deg = 1;
 param.pure_pursuit_lookahead = 8.0; % [m]
 
 % for mpc only
-param.mpc_dt = 0.1;
+param.mpc_dt = 0.1; %[s]
 param.mpc_n = 30;
 param.mpc_constraint_steering_deg = 30;
 param.mpc_constraint_steer_rate_deg = 280;
@@ -75,10 +75,10 @@ param.mpc2_R = 0.05;
 % initial position (x, y, yaw, delta)
 x0 = [0, 0.5, 0, 0];
 
-ts = 0;
+ts = 0; %time start
 dt = simulation_rk4_time_step;
-tf = simulation_time;
-t = ts:dt:tf;
+tf = simulation_time; %time finish
+t = ts:dt:tf; 
 
 %% reference trajectory design
 
@@ -121,7 +121,7 @@ for i = 2:length(ref)
     ref(i, IDX_TIME) = ref(i-1, IDX_TIME) + dt_;
 end
 
-
+plot(ref(:,1))
 %% simulation
 
 if control_mode == "pure_pursuit"
