@@ -18,7 +18,7 @@ set(0, 'DefaultAxesLineWidth', 1.0, 'DefaultLineLineWidth', 1.0);
 addpath ../path_design
 
 control_mode_option = ["pure_pursuit", "pid", "mpc", "mpc_no_constraints"];
-control_mode = control_mode_option(3);
+control_mode = control_mode_option(2);
 
 save_video = 1; %1:save, 0:no
 
@@ -128,7 +128,8 @@ if control_mode == "pure_pursuit"
     [X, U, debug] = simulate_rk4(@kinematics_model, @pure_pursuit, x0, ref, ts, dt, tf, param);
     lat_error_vec = debug(:,end);
 elseif control_mode == "pid"
-   [X, U, debug] = simulate_rk4(@kinematics_model, @pid_controller, x0, ref, ts, dt, tf, param);
+   %[X, U, debug] = simulate_rk4(@kinematics_model, @pid_controller, x0, ref, ts, dt, tf, param);
+   [X, U, debug] = simulate_rk4(@kinematics_diff, @pid_controller, x0, ref, ts, dt, tf, param);
    lat_error_vec = debug(:,end);
 elseif control_mode == "mpc"
     param.mpc_solve_without_constraint = false;
@@ -179,8 +180,11 @@ p1 = plot(t, X(:,IDX_STEER)*rad2deg, 'b'); grid on; hold on;
 p2 = plot(t, U(:,2)*rad2deg, 'Color', [0.7 0. 1]); hold on; 
 legend([p1,p2], {'measured','command'})
 xlabel('t [s]'); ylabel('steering angle [deg]');
-ulim = round(2*max(X(:,IDX_STEER)*rad2deg))/2;
-dlim = round(2*min(X(:,IDX_STEER)*rad2deg))/2;
+ulim = 29;
+dlim = -29;
+%ulim = round(2*max(X(:,IDX_STEER)*rad2deg))/2;
+%dlim = round(2*min(X(:,IDX_STEER)*rad2deg))/2;
+
 ylim([dlim, ulim]);
 
 z_axis = [0 0 1];
@@ -279,7 +283,7 @@ end
 if (save_video == 1)
     cd ./movie
     frame_vec(1) = [];
-    vidObj = VideoWriter('result.avi');
+    vidObj = VideoWriter('result.mp4');
     vidObj.FrameRate = 25;
     open(vidObj);
     writeVideo(vidObj, frame_vec);

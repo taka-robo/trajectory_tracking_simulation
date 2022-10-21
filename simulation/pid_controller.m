@@ -1,7 +1,7 @@
 function [u, debug_info] = pid_controller(state, t, ref, param)
 % 
 % state = [x, y, yaw, delta]
-% u = [v_des, delta_des]
+% u = [v, omega]
 % ref = [x_ref; y_ref; yaw_ref; v_ref];
 % 
 % 
@@ -19,7 +19,7 @@ IDX_CURVATURE = 5;
 % LON = 1;
 LAT = 2;
 
-kp = 0.3 * 1;
+kp = 0.3 * 100;
 kd = 0.5 * 3;
 
 yaw = state(IDX_YAW);
@@ -56,9 +56,10 @@ if (error_yaw > pi)
 elseif (error_yaw < -pi)
     error_yaw = error_yaw + 2*pi;
 end
-vr= -kp * (error_latlon(LAT)) - kd * error_yaw + ff_curvature;
-vl = -kp * (error_latlon(LAT));
-
-u = [vr, vl];
+v = kp * (error_latlon(LAT)) - kd * error_yaw + ff_curvature;
+omega = -kp * error_yaw;
+fb_lat = v;
+fb_yaw = omega;
+u = [v, omega];
 
 debug_info = [pr(IDX_X), pr(IDX_Y), pr(IDX_YAW), fb_lat, fb_yaw, ff_curvature, error_latlon(LAT)];
