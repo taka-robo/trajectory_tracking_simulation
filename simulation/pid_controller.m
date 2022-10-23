@@ -19,7 +19,7 @@ IDX_CURVATURE = 5;
 % LON = 1;
 LAT = 2;
 
-kp = 0.3 * 100;
+kp = 0.3 * 20;
 kd = 0.5 * 3;
 
 yaw = state(IDX_YAW);
@@ -56,7 +56,8 @@ if (error_yaw > pi)
 elseif (error_yaw < -pi)
     error_yaw = error_yaw + 2*pi;
 end
-v = kp * (error_latlon(LAT)) - kd * error_yaw + ff_curvature;
+%v = kp * (error_latlon(LAT)) - kd * error_yaw + ff_curvature;
+v = 15;
 omega = -kp * error_yaw;
 fb_lat = v;
 fb_yaw = omega;
